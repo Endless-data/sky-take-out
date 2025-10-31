@@ -34,8 +34,8 @@ public class EmployeeController {
     /**
      * 登录
      *
-     * @param employeeLoginDTO
-     * @return
+     * @param employeeLoginDTO 前端传来的登录信息
+     * @return 返回
      */
     @PostMapping("/login")
     public Result<EmployeeLoginVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO) {
@@ -64,7 +64,7 @@ public class EmployeeController {
     /**
      * 退出
      *
-     * @return
+     * @return 返回
      */
     @PostMapping("/logout")
     public Result<String> logout() {
@@ -74,8 +74,8 @@ public class EmployeeController {
     /**
      * 新增员工
      *
-     * @param employeeDTO
-     * @return
+     * @param employeeDTO 前端传来的员工信息
+     * @return 返回
      */
     @PostMapping
     public Result save(@RequestBody EmployeeDTO employeeDTO) {
@@ -87,8 +87,8 @@ public class EmployeeController {
     /**
      * 员工分页查询
      *
-     * @param employeePageQueryDTO
-     * @return
+     * @param employeePageQueryDTO 前端传来的分页查询参数
+     * @return 返回
      */
     @GetMapping("/page")
     public Result<PageResult> page(EmployeePageQueryDTO employeePageQueryDTO) {

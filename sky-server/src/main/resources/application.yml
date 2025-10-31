@@ -6,6 +6,7 @@ spring:
     active: dev
   main:
     allow-circular-references: true
+    banner-mode: off
   datasource:
     druid:
       driver-class-name: ${sky.datasource.driver-class-name}
@@ -20,6 +21,10 @@ mybatis:
   configuration:
     #开启驼峰命名
     map-underscore-to-camel-case: true
+
+mybatis-plus:
+  global-config:
+    banner: false
 
 logging:
   level:

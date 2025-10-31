@@ -14,7 +14,7 @@ public interface EmployeeMapper extends BaseMapper<Employee> {
     /**
      * 根据用户名查询员工
      * @param username
-     * @return
+     * @return 返回
      */
     @Select("select * from employee where username = #{username}")
     Employee getByUsername(String username);

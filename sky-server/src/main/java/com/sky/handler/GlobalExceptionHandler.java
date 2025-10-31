@@ -18,8 +18,8 @@ public class GlobalExceptionHandler {
 
     /**
      * 捕获业务异常
-     * @param ex
-     * @return
+     * @param ex 业务异常 业务异常
+     * @return 返回
      */
     @ExceptionHandler
     public Result exceptionHandler(BaseException ex){
@@ -29,8 +29,8 @@ public class GlobalExceptionHandler {
 
     /**
      * 捕获SQL唯一约束异常
-     * @param ex
-     * @return
+     * @param ex 业务异常
+     * @return 返回
      */
     @ExceptionHandler
     public Result exceptionHandler(SQLIntegrityConstraintViolationException ex){

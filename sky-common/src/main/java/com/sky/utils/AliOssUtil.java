@@ -24,7 +24,7 @@ public class AliOssUtil {
      *
      * @param bytes
      * @param objectName
-     * @return
+     * @return 返回
      */
     public String upload(byte[] bytes, String objectName) {
 

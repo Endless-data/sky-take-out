@@ -29,7 +29,7 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
      * @param request
      * @param response
      * @param handler
-     * @return
+     * @return 返回
      * @throws Exception
      */
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
