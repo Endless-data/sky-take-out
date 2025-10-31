@@ -19,10 +19,4 @@ public interface EmployeeMapper extends BaseMapper<Employee> {
     @Select("select * from employee where username = #{username}")
     Employee getByUsername(String username);
 
-    /**
-     * 员工分页查询
-     * @param employeePageQueryDTO
-     * @return
-     */
-    Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
 }

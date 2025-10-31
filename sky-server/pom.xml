@@ -47,6 +47,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.github.jsqlparser</groupId> <!-- 注意：是 com.github.jsqlparser，不是其他组名 -->
+            <artifactId>jsqlparser</artifactId>     <!--  artifactId 是 jsqlparser -->
+            <version>4.6</version>                 <!-- 版本号需 ≥4.0，根据需求选择 -->
+        </dependency>
+
+        <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
         </dependency>

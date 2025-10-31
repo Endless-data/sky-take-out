@@ -1,7 +1,7 @@
 package com.sky.service.impl;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -105,16 +104,22 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
-        // select * from employee limit ?, ?
-        // 开始分页查询
-        PageHelper.startPage((employeePageQueryDTO.getPage()), employeePageQueryDTO.getPageSize());
+        Page<Employee> page = new Page<>(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
 
-        Page<Employee> page = employeeMapper.pageQuery(employeePageQueryDTO);
+        // 构建查询条件
+        QueryWrapper<Employee> queryWrapper = new QueryWrapper<>();
+        // 如果name不为空，则添加模糊查询条件
+        String name = employeePageQueryDTO.getName();
+        if(name != null && !name.isEmpty()) {
+            queryWrapper.like("name", name);
+        }
+        // 按照更新时间降序排序
+        queryWrapper.orderByDesc("update_time");
 
-        //封装分页结果对象
-        long total = page.getTotal();
-        List<Employee> employees = page.getResult();
-        return new PageResult(total, employees);
+        // 执行分页查询
+        employeeMapper.selectPage(page, queryWrapper);
+
+        return new PageResult(page.getTotal(), page.getRecords());
     }
 
 }
