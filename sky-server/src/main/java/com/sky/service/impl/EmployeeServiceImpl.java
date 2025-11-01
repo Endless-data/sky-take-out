@@ -1,6 +1,7 @@
 package com.sky.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
@@ -121,6 +122,20 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeMapper.selectPage(page, queryWrapper);
 
         return new PageResult(page.getTotal(), page.getRecords());
+    }
+
+    /**
+     * 启用或禁用员工账号
+     *
+     * @param status 员工状态
+     * @param id     员工id
+     */
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        UpdateWrapper<Employee> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id", id).set("status", status);
+
+        employeeMapper.update(null, updateWrapper);
     }
 
 }
