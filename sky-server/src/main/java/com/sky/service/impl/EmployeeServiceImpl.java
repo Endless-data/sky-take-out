@@ -90,7 +90,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setUpdateTime(LocalDateTime.now());
 
         //设置当前记录人创建id和修改人id（暂时写死为10）
-        // TODO : 后续改为动态获取当前登录用户的id
         employee.setCreateUser(BaseContext.getCurrentId());
         employee.setUpdateUser(BaseContext.getCurrentId());
 
@@ -136,6 +135,43 @@ public class EmployeeServiceImpl implements EmployeeService {
         updateWrapper.eq("id", id).set("status", status);
 
         employeeMapper.update(null, updateWrapper);
+    }
+
+    /**
+     * 根据id查询员工信息
+     *
+     * @param id 员工id
+     * @return 返回
+     */
+    @Override
+    public Employee getById(Long id) {
+        Employee employee = employeeMapper.selectById(id);
+
+        // 为了安全起见，不返回密码字段
+        employee.setPassword("****");
+        return employee;
+    }
+
+    /**
+     * 修改员工信息
+     *
+     * @param employeeDTO 前端传来的员工信息
+     */
+    @Override
+    public void update(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+
+        //对象属性拷贝
+        BeanUtils.copyProperties(employeeDTO, employee);
+
+        //设置当前记录的修改时间
+        employee.setUpdateTime(LocalDateTime.now());
+
+        //设置当前记录的修改人id
+        employee.setUpdateUser(BaseContext.getCurrentId());
+
+        //根据id修改员工信息到数据库
+        employeeMapper.updateById(employee);
     }
 
 }
