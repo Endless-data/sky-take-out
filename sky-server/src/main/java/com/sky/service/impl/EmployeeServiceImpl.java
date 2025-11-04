@@ -1,8 +1,7 @@
 package com.sky.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
@@ -86,12 +85,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
 
         //设置当前记录的创建时间和修改时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setCreateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
 
         //设置当前记录人创建id和修改人id（暂时写死为10）
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        employee.setCreateUser(BaseContext.getCurrentId());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
 
         //保存员工信息到数据库
         employeeMapper.insert(employee);
@@ -105,22 +104,13 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
-        Page<Employee> page = new Page<>(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
+        // select * from employee limit ?, ? where name like '%xx%'
+        // 开始分页查询
+        PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
 
-        // 构建查询条件
-        QueryWrapper<Employee> queryWrapper = new QueryWrapper<>();
-        // 如果name不为空，则添加模糊查询条件
-        String name = employeePageQueryDTO.getName();
-        if(name != null && !name.isEmpty()) {
-            queryWrapper.like("name", name);
-        }
-        // 按照更新时间降序排序
-        queryWrapper.orderByDesc("update_time");
+        Page<Employee> page =  employeeMapper.pageQuery(employeePageQueryDTO);
 
-        // 执行分页查询
-        employeeMapper.selectPage(page, queryWrapper);
-
-        return new PageResult(page.getTotal(), page.getRecords());
+        return new PageResult(page.getTotal(), page.getResult());
     }
 
     /**
@@ -131,10 +121,14 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public void startOrStop(Integer status, Long id) {
-        UpdateWrapper<Employee> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("id", id).set("status", status);
+        // update employee set status = ? where id = ?
 
-        employeeMapper.update(null, updateWrapper);
+        Employee employee = Employee.builder()
+                .status(status)
+                .id(id)
+                .build();
+
+        employeeMapper.update(employee);
     }
 
     /**
@@ -145,7 +139,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public Employee getById(Long id) {
-        Employee employee = employeeMapper.selectById(id);
+        Employee employee = employeeMapper.getById(id);
 
         // 为了安全起见，不返回密码字段
         employee.setPassword("****");
@@ -165,13 +159,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         BeanUtils.copyProperties(employeeDTO, employee);
 
         //设置当前记录的修改时间
-        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
 
         //设置当前记录的修改人id
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
 
         //根据id修改员工信息到数据库
-        employeeMapper.updateById(employee);
+        employeeMapper.update(employee);
     }
 
 }
