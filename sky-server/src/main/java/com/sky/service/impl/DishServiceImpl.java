@@ -174,6 +174,8 @@ public class DishServiceImpl implements DishService {
      */
     @Override
     public void startOrStop(Integer status, Long id) {
+        // 停售菜品时，检查菜品关联的套餐是否在售
+        // TODO: 这里可以根据业务需求决定是否需要检查关联套餐的状态
         Dish dish = Dish.builder()
                 .status(status)
                 .id(id)
