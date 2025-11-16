@@ -16,6 +16,7 @@ import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.SetmealService;
+import com.sky.vo.DishItemVO;
 import com.sky.vo.SetmealVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -143,6 +144,11 @@ public class SetmealServiceImpl implements SetmealService {
 
     }
 
+    /**
+     * 起售或停售套餐
+     * @param status 套餐状态
+     * @param id 套餐id
+     */
     @Override
     public void startOrStop(Integer status, Long id) {
         // 起售套餐时，检查套餐中的菜品是否都已停售
@@ -162,5 +168,24 @@ public class SetmealServiceImpl implements SetmealService {
                 .id(id)
                 .build();
         setmealMapper.update(setmeal);
+    }
+
+    /**
+     * 条件查询
+     * @param setmeal 套餐信息
+     * @return
+     */
+    public List<Setmeal> list(Setmeal setmeal) {
+        List<Setmeal> list = setmealMapper.list(setmeal);
+        return list;
+    }
+
+    /**
+     * 根据id查询菜品选项
+     * @param id 菜品id
+     * @return 菜品选项列表
+     */
+    public List<DishItemVO> getDishItemById(Long id) {
+        return setmealMapper.getDishItemBySetmealId(id);
     }
 }
