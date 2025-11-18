@@ -27,6 +27,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     DishMapper dishMapper;
     @Autowired
     SetmealMapper setmealMapper;
+    @Autowired
+    private ShoppingCartService shoppingCartService;
 
     @Override
     public void add(ShoppingCartDTO shoppingCartDTO) {
@@ -65,6 +67,56 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             shoppingCart.setNumber(1);
             shoppingCart.setCreateTime(LocalDateTime.now());
             shoppingCartMapper.insert(shoppingCart);
+        }
+    }
+
+    /**
+     * 查看购物车列表
+     *
+     * @return 购物车列表
+     */
+    @Override
+    public List<ShoppingCart> showCart() {
+        // 根据用户id查询购物车列表
+        Long userId = BaseContext.getCurrentId();
+        ShoppingCart shoppingCart = ShoppingCart.builder()
+                .id(userId)
+                .build();
+        return shoppingCartMapper.list(shoppingCart);
+    }
+
+    /**
+     * 清空购物车
+     */
+    @Override
+    public void cleanCart() {
+        // 根据用户id删除购物车中的所有数据
+        Long userId = BaseContext.getCurrentId();
+        shoppingCartMapper.deleteByUserId(userId);
+    }
+
+    /**
+     * 购物车中减少商品
+     *
+     * @param shoppingCartDTO 购物车数据
+     */
+    @Override
+    public void sub(ShoppingCartDTO shoppingCartDTO) {
+        Long userId = BaseContext.getCurrentId();
+        ShoppingCart shoppingCart = new ShoppingCart();
+        BeanUtils.copyProperties(shoppingCartDTO, shoppingCart);
+        shoppingCart.setUserId(userId);
+
+        List<ShoppingCart> list = shoppingCartMapper.list(shoppingCart);
+        if (list != null && !list.isEmpty()){
+            shoppingCart = list.get(0);
+            Integer currentNumber = shoppingCart.getNumber();
+            if (currentNumber > 1) {
+                shoppingCart.setNumber(currentNumber - 1);
+                shoppingCartMapper.updateNumber(shoppingCart);
+            } else {
+                shoppingCartMapper.deleteById(shoppingCart.getId());
+            }
         }
     }
 }
