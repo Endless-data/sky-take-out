@@ -100,4 +100,16 @@ public class OrderController {
         orderService.repetition(id);
         return Result.success();
     }
+
+    /**
+     * 订单催单
+     *
+     * @param id 订单ID
+     * @return 操作结果
+     */
+    @GetMapping("/reminder/{id}")
+    public Result reminder(@PathVariable("id") Long id) {
+        orderService.reminder(id);
+        return Result.success();
+    }
 }
